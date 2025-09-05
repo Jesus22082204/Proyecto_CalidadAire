@@ -4,38 +4,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mockup - Calidad del Aire Aguachica</title>
+    <title>Calidad del Aire - Aguachica</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="script.js"></script>
 </head>
-
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-<script src="script.js"></script>
 
 <body class="bg-gray-100 font-sans">
     <!-- Header -->
-    <header class="flex justify-between items-center bg-white shadow px-6 py-3">
-        <div class="text-xl font-bold text-blue-700">Calidad del Aire - Aguachica</div>
-        <div class="flex items-center space-x-4">
-            <select class="border rounded px-2 py-1">
+    <header class="flex flex-col md:flex-row justify-between items-center bg-white shadow px-6 py-4 gap-3">
+        <div class="flex items-center space-x-2">
+            <span class="text-2xl">🌍</span>
+            <h1 class="text-xl md:text-2xl font-bold text-blue-700">Calidad del Aire - Aguachica</h1>
+        </div>
+        <div class="flex items-center space-x-3">
+            <select class="border rounded px-3 py-2 text-sm">
                 <option>Última semana</option>
                 <option>Último mes</option>
                 <option>Año actual</option>
             </select>
-            <button class="bg-blue-600 text-white px-3 py-1 rounded">Exportar</button>
-            <img src="https://via.placeholder.com/32" alt="Perfil" class="rounded-full">
+            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition text-sm">
+                Exportar
+            </button>
+            <img src="https://via.placeholder.com/40" alt="Perfil" class="rounded-full border w-8 h-8 md:w-10 md:h-10">
         </div>
     </header>
 
-    <!-- Main Content -->
-    <div class="flex">
+    <div class="flex flex-col md:flex-row">
         <!-- Sidebar -->
-        <aside class="w-1/5 bg-white shadow p-4 space-y-4">
+        <aside class="w-full md:w-1/4 bg-white shadow p-5 space-y-6">
             <div>
-                <h2 class="font-semibold text-gray-700 mb-2">Filtros</h2>
-                <label class="block text-sm">Contaminante</label>
-                <select class="w-full border rounded px-2 py-1">
+                <h2 class="font-semibold text-gray-700 mb-3 text-lg">Filtros</h2>
+                <label class="block text-sm font-medium mb-1">Contaminante</label>
+                <select class="w-full border rounded px-3 py-2">
                     <option>PM2.5</option>
                     <option>PM10</option>
                     <option>NO₂</option>
@@ -43,16 +45,16 @@
                 </select>
             </div>
             <div>
-                <label class="block text-sm">Estación</label>
-                <select class="w-full border rounded px-2 py-1">
+                <label class="block text-sm font-medium mb-1">Estación</label>
+                <select class="w-full border rounded px-3 py-2">
                     <option>Centro</option>
                     <option>Universidad</option>
                     <option>Zona Rural</option>
                 </select>
             </div>
             <div>
-                <label class="block text-sm">Capas del mapa</label>
-                <div class="space-y-1 text-sm">
+                <label class="block text-sm font-medium mb-2">Capas del mapa</label>
+                <div class="space-y-2 text-sm">
                     <label class="flex items-center"><input type="checkbox" class="mr-2">Sensores</label>
                     <label class="flex items-center"><input type="checkbox" class="mr-2">Límites municipales</label>
                     <label class="flex items-center"><input type="checkbox" class="mr-2">Uso de suelo</label>
@@ -61,19 +63,18 @@
         </aside>
 
         <!-- Dashboard -->
-        <main class="flex-1 p-6 space-y-6">
-            <!-- Map -->
-            <section class="bg-white rounded-2xl shadow p-4 flex flex-col">
-                <h3 class="font-semibold text-gray-700 mb-2">Estaciones con AQI - Aguachica</h3>
+        <main class="flex-1 p-4 md:p-8 space-y-8">
 
-                <!-- Mapa en horizontal -->
-                <div id="map" class="w-full h-72 rounded mb-4"></div>
-
-                <!-- Info debajo del mapa -->
-                <div class="text-sm text-gray-600 mb-1">Ubicación: Parque Central, Aguachica, Cesar</div>
-                <div class="text-sm text-gray-600 mb-1">Coordenadas: 8.312, -73.626</div>
-                <div class="text-sm text-gray-600 mb-1">Contaminante principal: PM₂.₅</div>
-                <div class="text-sm text-gray-600">Última actualización: 2025-08-28 15:45</div>
+            <!-- Mapa -->
+            <section class="bg-white rounded-2xl shadow p-6">
+                <h3 class="font-semibold text-gray-700 text-lg mb-4">Estaciones con AQI - Aguachica</h3>
+                <div id="map" class="w-full h-64 md:h-80 rounded-xl mb-4"></div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-600">
+                    <p>📍 Ubicación: Parque Central, Aguachica, Cesar</p>
+                    <p>🗺️ Coordenadas: 8.312, -73.626</p>
+                    <p>🌫️ Contaminante principal: PM₂.₅</p>
+                    <p>⏰ Última actualización: 2025-08-28 15:45</p>
+                </div>
             </section>
 
             <script>
@@ -86,251 +87,144 @@
                 }).addTo(map);
 
                 // Ejemplo: añadir marcador en Parque Central con popup AQI
-                L.marker([8.312, -73.626]).addTo(map)
+                L.marker([8.310675833008426, -73.62363665855918]).addTo(map)
                     .bindPopup("<b>Estación Parque Central</b><br>AQI: 68<br>PM2.5: Moderado")
+                    .openPopup();
+
+                L.marker([8.314789098234467, -73.59638568793966]).addTo(map)
+                    .bindPopup("<b>Universidad Popular del cesar</b><br>AQI: 68<br>PM2.5: Moderado")
                     .openPopup();
             </script>
 
-            <!-- Timeline and KPIs -->
-            <div class="grid grid-cols-3 gap-6">
-                <section class="col-span-2 bg-white rounded-2xl shadow p-4 h-64">
-                    <h3 class="font-semibold text-gray-700 mb-2">Serie temporal de contaminantes</h3>
-                    <table class="w-full text-xs text-center">
-                        <thead>
-                            <tr class="bg-gray-100">
-                                <th>Fecha y Hora</th>
-                                <th>PM₂.₅ (µg/m³)</th>
-                                <th>PM₁₀ (µg/m³)</th>
-                                <th>O₃ (ppb)</th>
-                                <th>NO₂ (ppb)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>2025-08-27 00:00</td>
-                                <td>18</td>
-                                <td>34</td>
-                                <td>12</td>
-                                <td>14</td>
-                            </tr>
-                            <tr class="bg-gray-50">
-                                <td>2025-08-27 06:00</td>
-                                <td>22</td>
-                                <td>39</td>
-                                <td>10</td>
-                                <td>15</td>
-                            </tr>
-                            <tr>
-                                <td>2025-08-27 12:00</td>
-                                <td>28</td>
-                                <td>43</td>
-                                <td>18</td>
-                                <td>12</td>
-                            </tr>
-                            <tr class="bg-gray-50">
-                                <td>2025-08-27 18:00</td>
-                                <td>34</td>
-                                <td>48</td>
-                                <td>16</td>
-                                <td>13</td>
-                            </tr>
-                            <tr>
-                                <td>2025-08-28 00:00</td>
-                                <td>25</td>
-                                <td>37</td>
-                                <td>14</td>
-                                <td>11</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </section>
-                <section class="bg-white rounded-2xl shadow p-4 space-y-2">
-                    <h3 class="font-semibold text-gray-700">Indicadores</h3>
-                    <div class="grid grid-cols-2 gap-2 text-center">
-                        <!-- PM2.5 Promedio -->
-                        <div class="bg-green-100 rounded p-2">
-                            <p class="text-sm">PM2.5 Promedio</p>
-                            <p id="pm25" class="font-bold text-lg">Cargando...</p>
-                        </div>
-                        <!-- PM10 Promedio -->
-                        <div class="bg-yellow-100 rounded p-2">
-                            <p class="text-sm">PM10 Promedio</p>
-                            <p id="pm10" class="font-bold text-lg">Cargando...</p>
-                        </div>
-                        <!-- Temperatura Media -->
-                        <div class="bg-blue-100 rounded p-2">
-                            <p class="text-sm">Temperatura</p>
-                            <p id="temperature" class="font-bold text-lg">Cargando...</p>
-                        </div>
-                        <!-- Calidad del Aire -->
-                        <div class="rounded p-2" id="airQuality">
-                            <p class="text-sm">Calidad del Aire</p>
-                            <p class="font-bold text-lg" id="qualityMessage">Cargando...</p>
-                        </div>
-                    </div>
-                    <button class="w-full bg-blue-600 text-white px-3 py-1 rounded">Generar Interpretación</button>
-                </section>
-            </div>
-
-            <!-- Extra Graphs -->
-            <div class="grid grid-cols-2 gap-6">
-                <section class="bg-white rounded-2xl shadow p-4 h-60">
-                    <h3 class="font-semibold text-gray-700 mb-2">Heatmap horario</h3>
-
-                    <!-- Contenedor de la tabla -->
-                    <div id="heatmapContainer">
-                        <table class="w-full text-xs text-center" id="heatmapTable">
+            <!-- Serie temporal + Indicadores -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Serie temporal -->
+                <section class="lg:col-span-2 bg-white rounded-2xl shadow p-6">
+                    <h3 class="font-semibold text-gray-700 text-lg mb-4">Serie temporal de contaminantes</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-center border">
                             <thead>
-                                <tr class="bg-gray-100">
-                                    <th>Hora</th>
+                                <tr class="bg-gray-100 text-gray-700">
+                                    <th class="px-2 py-1">Fecha y Hora</th>
                                     <th>PM₂.₅</th>
                                     <th>PM₁₀</th>
                                     <th>O₃</th>
-                                    <th>NO₂</th> 
+                                    <th>NO₂</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Las filas se llenarán dinámicamente con JavaScript -->
+                                <tr class="hover:bg-gray-50">
+                                    <td>2025-08-27 00:00</td>
+                                    <td>18</td>
+                                    <td>34</td>
+                                    <td>12</td>
+                                    <td>14</td>
+                                </tr>
+                                <tr class="bg-gray-50 hover:bg-gray-100">
+                                    <td>2025-08-27 06:00</td>
+                                    <td>22</td>
+                                    <td>39</td>
+                                    <td>10</td>
+                                    <td>15</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div class="mt-2 text-xs text-gray-500">Colores representan mayor (rojo) o menor (verde)
-                        concentración.</div>
+                </section>
+
+                <!-- Indicadores -->
+                <section class="bg-white rounded-2xl shadow p-6 space-y-4">
+                    <h3 class="font-semibold text-gray-700 text-lg">Indicadores</h3>
+                    <div class="grid grid-cols-2 gap-4 text-center">
+                        <div class="bg-green-100 rounded-xl p-4 shadow">
+                            <p class="text-sm">🌫️ PM2.5</p>
+                            <p id="pm25" class="font-bold text-xl">Cargando...</p>
+                        </div>
+                        <div class="bg-yellow-100 rounded-xl p-4 shadow">
+                            <p class="text-sm">💨 PM10</p>
+                            <p id="pm10" class="font-bold text-xl">Cargando...</p>
+                        </div>
+                        <div class="bg-blue-100 rounded-xl p-4 shadow">
+                            <p class="text-sm">🌡️ Temp</p>
+                            <p id="temperature" class="font-bold text-xl">Cargando...</p>
+                        </div>
+                        <div class="rounded-xl p-4 shadow" id="airQuality">
+                            <p class="text-sm">✅ Calidad</p>
+                            <p class="font-bold text-xl" id="qualityMessage">Cargando...</p>
+                        </div>
+                    </div>
+                    <button
+                        class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition">
+                        Generar Interpretación
+                    </button>
                 </section>
             </div>
 
-
-            <!--</section>
-            <section class="bg-white rounded-2xl shadow p-4 h-60 flex flex-col items-center">
-                <h3 class="font-semibold text-gray-700 mb-2">Rosa de vientos</h3>
-                <div class="flex-1 flex flex-col items-center justify-center">
-                    <svg width="120" height="120">
-                        <circle cx="60" cy="60" r="50" fill="#f0f9ff" />
-                        <line x1="60" y1="60" x2="100" y2="30" stroke="#2563eb" stroke-width="4" />
-                        <text x="102" y="28" font-size="10" fill="#2563eb">NE</text>
-                    </svg>
-                    <div class="text-xs mt-2 text-gray-600">
-                        Predominancia: NE (40%)<br>
-                        Velocidad media: 7 km/h
-                    </div>
+            <!-- Heatmap + Pronóstico -->
+            <section class="bg-white rounded-2xl shadow p-6">
+                <h3 class="font-semibold text-gray-700 text-lg mb-4">Heatmap horario</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-center border" id="heatmapTable">
+                        <thead>
+                            <tr class="bg-blue-50 text-gray-700">
+                                <th>Hora</th>
+                                <th>PM₂.₅</th>
+                                <th>PM₁₀</th>
+                                <th>O₃</th>
+                                <th>NO₂</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
-            </section>-->
-            <section class="bg-white rounded-2xl shadow p-4 h-60">
-                <h3 class="font-semibold text-gray-700 mb-2">Boxplots mensuales PM₂.₅ (2025)</h3>
-                <table class="w-full text-xs text-center">
-                    <thead>
-                        <tr class="bg-gray-100">
-                            <th>Mes</th>
-                            <th>Mediana</th>
-                            <th>Q1</th>
-                            <th>Q3</th>
-                            <th>Mín</th>
-                            <th>Máx</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Enero</td>
-                            <td>23</td>
-                            <td>18</td>
-                            <td>27</td>
-                            <td>12</td>
-                            <td>36</td>
-                        </tr>
-                        <tr class="bg-gray-50">
-                            <td>Febrero</td>
-                            <td>25</td>
-                            <td>19</td>
-                            <td>29</td>
-                            <td>14</td>
-                            <td>38</td>
-                        </tr>
-                        <tr>
-                            <td>Marzo</td>
-                            <td>22</td>
-                            <td>17</td>
-                            <td>26</td>
-                            <td>13</td>
-                            <td>35</td>
-                        </tr>
-                        <tr class="bg-gray-50">
-                            <td>Abril</td>
-                            <td>20</td>
-                            <td>16</td>
-                            <td>24</td>
-                            <td>11</td>
-                            <td>32</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="mt-3 text-xs text-gray-500">Colores representan mayor (rojo) o menor (verde) concentración.
+                </div>
+                <div id="forecastMessage" class="mt-4 text-base font-medium text-center">
+                    Cargando pronóstico...
+                </div>
             </section>
 
-            <section class="bg-white rounded-2xl shadow p-4 h-60">
-                <h3 class="font-semibold text-gray-700 mb-2">Boxplots mensuales PM₁₀ (2025)</h3>
-                <table class="w-full text-xs text-center">
-                    <thead>
-                        <tr class="bg-gray-100">
-                            <th>Mes</th>
-                            <th>Mediana</th>
-                            <th>Q1</th>
-                            <th>Q3</th>
-                            <th>Mín</th>
-                            <th>Máx</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Enero</td>
-                            <td>23</td>
-                            <td>18</td>
-                            <td>27</td>
-                            <td>12</td>
-                            <td>36</td>
-                        </tr>
-                        <tr class="bg-gray-50">
-                            <td>Febrero</td>
-                            <td>25</td>
-                            <td>19</td>
-                            <td>29</td>
-                            <td>14</td>
-                            <td>38</td>
-                        </tr>
-                        <tr>
-                            <td>Marzo</td>
-                            <td>22</td>
-                            <td>17</td>
-                            <td>26</td>
-                            <td>13</td>
-                            <td>35</td>
-                        </tr>
-                        <tr class="bg-gray-50">
-                            <td>Abril</td>
-                            <td>20</td>
-                            <td>16</td>
-                            <td>24</td>
-                            <td>11</td>
-                            <td>32</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <!-- Boxplots -->
+            <section class="bg-white rounded-2xl shadow p-6">
+                <h3 class="font-semibold text-gray-700 text-lg mb-4">Boxplots mensuales PM₂.₅ y PM₁₀ (2025)</h3>
+                <div class="overflow-x-auto">
+                    <table id="boxplotTable" class="w-full text-sm text-center border-collapse border">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th rowspan="2">Mes</th>
+                                <th colspan="5">PM₂.₅</th>
+                                <th colspan="5">PM₁₀</th>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <th>Mediana</th>
+                                <th>Q1</th>
+                                <th>Q3</th>
+                                <th>Mín</th>
+                                <th>Máx</th>
+                                <th>Mediana</th>
+                                <th>Q1</th>
+                                <th>Q3</th>
+                                <th>Mín</th>
+                                <th>Máx</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </section>
-            <section class="bg-white rounded-2xl shadow p-4 h-60">
-                <h3 class="font-semibold text-gray-700 mb-2">Anomalías detectadas</h3>
-                <ul class="list-disc ml-6 text-sm text-gray-700">
-                    <li><strong>2025-03-15 14:00</strong>: Pico inusual de PM₂.₅ (49 µg/m³), posible quema de
-                        residuos en las cercanías.</li>
-                    <li><strong>2025-04-02 09:00</strong>: Concentración de O₃ duplicó el promedio habitual,
-                        probable aumento por condiciones meteorológicas.</li>
-                    <li><strong>2025-07-20 21:00</strong>: Caída abrupta en los datos de NO₂, posible fallo temporal
-                        de sensores.</li>
+
+            <!-- Anomalías -->
+            <section class="bg-white rounded-2xl shadow p-6">
+                <h3 class="font-semibold text-gray-700 text-lg mb-4">Anomalías detectadas</h3>
+                <ul id="anomaliasList" class="list-disc ml-6 text-sm text-gray-700 space-y-1">
+                    <li class="text-gray-500">Cargando anomalías...</li>
                 </ul>
             </section>
-    </div>
-    </main>
+        </main>
     </div>
 
     <!-- Footer -->
-    <footer class="bg-gray-200 text-gray-600 text-center py-2 text-sm">
+    <footer class="bg-gray-200 text-gray-600 text-center py-3 text-sm mt-6">
         Datos: IDEAM / Datos.gov.co / Corpocesar | Última actualización: 28 Ago 2025 12:00
     </footer>
 </body>
